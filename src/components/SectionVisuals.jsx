@@ -1,14 +1,15 @@
-function TractorBase({ tone = "#287a38" }) {
+function TractorBase({ image, model, tone = "#287a38" }) {
   return (
     <img
-      src="https://www.deere.co.in/assets/images/region-2/our-company/news/press-releases/2024/johndeereindia-tractor.jpg"
-      alt="john deere tractor"
+      src={image}
+      alt={`${model} John Deere tractor`}
+      loading="lazy"
       style={{objectFit: 'cover', width: '100%', height: '100%', filter: `drop-shadow(0 0 4px ${tone})`}}
     />
   );
 }
 
-export function TractorVisual({ index }) {
+export function TractorVisual({ tractor, index }) {
   const tones = [
     "#287a38",
     "#2f8b3d",
@@ -17,19 +18,19 @@ export function TractorVisual({ index }) {
     "#1f783a",
     "#2d7a3f",
   ];
+  const image = tractor.images?.[index % tractor.images.length] || '/tractor-01.jfif';
 
   return (
     <div className="product-visual tractor-visual">
-      <TractorBase tone={tones[index % tones.length]} />
+      <TractorBase image={image} model={tractor.model} tone={tones[index % tones.length]} />
     </div>
   );
 }
 
-export function ImplementVisual() {
+export function ImplementVisual({ name, image }) {
   return (
     <div className="product-visual implement-visual">
-         <img src="https://www.deere.co.in/assets/images/region-1/homepage/in-implements-200x113.jpg" alt="john deere tractor" />
-
+      <img src={image || '/impliment-01.avif'} alt={name} loading="lazy" />
     </div>
   );
 }
@@ -37,8 +38,7 @@ export function ImplementVisual() {
 export function EmployeeSupportVisual() {
   return (
     <div className="staff-visual">
-          <img src="https://www.deere.co.in/assets/images/region-1/finance/John-Deere-Finance-India-Tractor-Loan.jpg" alt="john deere tractor" />
-
+      <img src="/Service and Support.webp" alt="Aryan Motors service and support" loading="lazy" />
     </div>
   );
 }
@@ -46,27 +46,26 @@ export function EmployeeSupportVisual() {
 export function BankFarmerVisual() {
   return (
     <div className="bank-visual">
-     <img src="https://www.deere.co.in/assets/images/region-1/finance/John-Deere-Finance-India-Tractor-Loan.jpg" alt="john deere tractor" />
+      <img src="/banner02.jpg" alt="Aryan Motors finance support" loading="lazy" />
     </div>
   );
 }
 
-function LocationSlide() {
+function BranchImageSlide({ slide }) {
   return (
     <div className="location-slide">
-           <img src="/banner01.jpg" alt="john deere tractor" />
-
+      <img src={slide.src} alt={slide.title} loading="lazy" />
     </div>
   );
 }
 
 export function LocationCarousel({ location }) {
-  const slides = [
-    { title: `${location.subtitle} Showroom`, variant: "showroom" },
-    { title: "Tractor Display", variant: "tractor" },
-    { title: "Directions & Service", variant: "map" },
-    { title: "Parts Counter", variant: "service" },
-  ];
+  const slides = location.images?.length
+    ? location.images
+    : [
+        { title: `${location.subtitle} showroom`, src: '/banner01.jpg' },
+        { title: 'John Deere tractor display', src: '/tractor-01.jfif' },
+      ];
   const scrollingSlides = [...slides, ...slides];
 
   return (
@@ -76,7 +75,7 @@ export function LocationCarousel({ location }) {
     >
       <div className="location-carousel-track">
         {scrollingSlides.map((slide, index) => (
-          <LocationSlide key={`${slide.title}-${index}`} />
+          <BranchImageSlide slide={slide} key={`${slide.title}-${index}`} />
         ))}
       </div>
     </div>

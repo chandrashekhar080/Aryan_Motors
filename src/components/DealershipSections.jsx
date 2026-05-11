@@ -1,4 +1,11 @@
-import { actionCards, implementNames, supportItems, tractors } from './dealerData'
+import {
+  actionCards,
+  implementsByCategory,
+  partsCards,
+  supportItems,
+  tractorFaqs,
+  tractors,
+} from './dealerData'
 import {
   BankFarmerVisual,
   EmployeeSupportVisual,
@@ -23,6 +30,97 @@ function ActionCards() {
   )
 }
 
+function PartsSection() {
+  return (
+    <section className="section parts-section" id="parts">
+      <div className="section-heading">
+        <p className="eyebrow">Parts counter</p>
+        <h2>Genuine parts, Reman options and everyday service essentials.</h2>
+        <p>Use the cards below to ask Aryan Motors for exact part availability, fitment and pricing.</p>
+      </div>
+      <div className="parts-grid">
+        {partsCards.map((part) => (
+          <article className="parts-card" key={part.title}>
+            <div className="parts-card-media">
+              <img src={part.image} alt={part.title} />
+            </div>
+            <div className="parts-card-copy">
+              <span>{part.kicker}</span>
+              <h3>{part.title}</h3>
+              <p>{part.text}</p>
+              <a href="#contact">{part.action}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function ImplementsSection() {
+  return (
+    <section className="section implements-section" id="implements">
+      <div className="section-heading">
+        <p className="eyebrow">Tractor implements</p>
+        <h2>Your matching tractor implement is only a few clicks away.</h2>
+        <p>Browse land preparation, sowing, crop care, harvest and residue management implements.</p>
+      </div>
+      <nav className="implement-category-nav" aria-label="Implement categories">
+        {implementsByCategory.map((group) => (
+          <a href={`#${group.category.toLowerCase().replaceAll(' ', '-')}`} key={group.category}>
+            {group.category}
+          </a>
+        ))}
+      </nav>
+      <div className="implement-category-stack">
+        {implementsByCategory.map((group) => (
+          <section
+            className="implement-category"
+            id={group.category.toLowerCase().replaceAll(' ', '-')}
+            key={group.category}
+          >
+            <div className="implement-category-heading">
+              <h3>{group.category}</h3>
+              <p>{group.intro}</p>
+            </div>
+            <div className="implement-card-grid">
+              {group.items.map((implement) => (
+                <article className="implement-card" key={`${group.category}-${implement.title}`}>
+                  <ImplementVisual image={implement.image} name={implement.title} />
+                  <div className="implement-card-copy">
+                    <h4>{implement.title}</h4>
+                    <p>{implement.text}</p>
+                    <a href="#contact">View {implement.title}</a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function FaqSection() {
+  return (
+    <section className="section faq-section" id="faqs">
+      <div className="section-heading">
+        <p className="eyebrow">FAQs</p>
+        <h2>Common John Deere tractor questions.</h2>
+      </div>
+      <div className="faq-list">
+        {tractorFaqs.map((faq) => (
+          <details className="faq-item" key={faq.question}>
+            <summary>{faq.question}</summary>
+            <p>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function DealershipSections({ onLeadSubmitted }) {
   return (
     <>
@@ -41,7 +139,7 @@ function DealershipSections({ onLeadSubmitted }) {
       <section className="quick-links" aria-label="Quick dealership actions">
         <a href="#contact">Book a test drive</a>
         <a href="#finance">Tractor loan request</a>
-        <a href="#service">Order spare parts</a>
+        <a href="#parts">Order spare parts</a>
         <a href="#implements">Select implements</a>
       </section>
 
@@ -54,7 +152,7 @@ function DealershipSections({ onLeadSubmitted }) {
         <div className="tractor-grid">
           {tractors.map((tractor, index) => (
             <article className="tractor-card" key={tractor.model}>
-              <TractorVisual model={tractor.model} index={index} />
+              <TractorVisual tractor={tractor} index={index} />
               <div className="card-topline">
                 <span>{tractor.series}</span>
                 <strong>{tractor.hp}</strong>
@@ -74,20 +172,9 @@ function DealershipSections({ onLeadSubmitted }) {
         </div>
       </section>
 
-      <section className="section implements-section" id="implements">
-        <div className="section-heading">
-          <p className="eyebrow">Equipment and implements</p>
-          <h2>Land preparation, sowing, crop care and residue management.</h2>
-        </div>
-        <div className="implement-list">
-          {implementNames.map((implement, index) => (
-            <a href="#contact" key={implement}>
-              <ImplementVisual name={implement} index={index} />
-              <span>{implement}</span>
-            </a>
-          ))}
-        </div>
-      </section>
+      <PartsSection />
+
+      <ImplementsSection />
 
       <section className="section support-section" id="service">
         <div className="section-heading">
@@ -120,6 +207,8 @@ function DealershipSections({ onLeadSubmitted }) {
       </section>
 
       <BusinessDirectory />
+
+      <FaqSection />
 
       <section className="contact-section" id="contact">
         <div className="contact-copy">
